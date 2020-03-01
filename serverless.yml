@@ -1,0 +1,49 @@
+service: stock-information-service
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-2
+  environment:
+    USER_INFO_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+
+functions:
+  userInfoSubmission:
+    handler: api/userInfo.submit
+    memorySize: 128
+    description: Submit user information.
+    events:
+      - http: 
+          path: userInfo
+          method: post
+
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - dynamodb:Query
+      - dynamodb:Scan
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+    Resource: "*"         
+
+resources:
+  Resources:
+    UserInfoDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+       TableName: ${self:provider.environment.USER_INFO_TABLE}
+       AttributeDefinitions:
+          -
+            AttributeName: "id"
+            AttributeType: "S"   
+       KeySchema:
+          -
+            AttributeName: "id"
+            KeyType: "HASH"
+       ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
