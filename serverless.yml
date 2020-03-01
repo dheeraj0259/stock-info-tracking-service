@@ -8,7 +8,7 @@ provider:
   stage: dev
   region: us-east-2
   environment:
-    USER_INFO_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    USER_INFO_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
 functions:
   userInfoSubmission:
