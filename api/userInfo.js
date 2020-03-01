@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
-const uuid = require('uuid');
-const AWS = require('aws-sdk'); 
-const moment = require('moment');
+const uuid = require("uuid");
+const AWS = require("aws-sdk");
+const moment = require("moment");
 
-AWS.config.setPromisesDependency(require('bluebird'));
-
+const { common } = require("../util");
+AWS.config.setPromisesDependency(require("bluebird"));
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.submit = async (event, context, callback) => {
+const submit = async (event, context, callback) => {
   const requestBody = JSON.parse(event.body);
   const firstName = requestBody.firstName;
   const lastName = requestBody.lastName;
@@ -19,24 +19,21 @@ module.exports.submit = async (event, context, callback) => {
   const userDetails = userInfomation(firstName, lastName, password, email);
 
   try {
-    submitUserInfo(userDetails)
-      callback(null, {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: `Sucessfully submitted user information with email ${email}`,
-          userId: userDetails.id
-        })
-      });
-  } catch(err) {
-      callback(null, {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: `Failed submitting user information with email ${email}`,
-          userId: userDetails.id
-        })
-      });
+    submitUserInfo(userDetails);
+    return common.responseObj(
+      callback,
+      200,
+      `Sucessfully submitted user information with email ${email}`,
+      userDetails.id
+    );
+  } catch (err) {
+    return common.responseObj(
+      callback,
+      500,
+      `Failed submitting user information with email ${email}`,
+      userDetails.id
+    );
   }
-
 };
 
 const validateParams = (firstName, lastName, password, email, callback) => {
@@ -44,39 +41,39 @@ const validateParams = (firstName, lastName, password, email, callback) => {
     callback(null, {
       statusCode: 404,
       body: JSON.stringify({
-        message: 'Missing parameters'
+        message: "Missing parameters"
       })
     });
     return;
-}
-
-  if (typeof firstName !== 'string' || 
-      typeof lastName !== 'string' || 
-      typeof password !== 'string' || 
-      typeof email !== 'string') {
-        callback(null, {
-          statusCode: 412,
-          body: JSON.stringify({
-            message: 'validation failed for the params'
-          })
-        });
-        return;
   }
 
-}
+  if (
+    typeof firstName !== "string" ||
+    typeof lastName !== "string" ||
+    typeof password !== "string" ||
+    typeof email !== "string"
+  ) {
+    callback(null, {
+      statusCode: 412,
+      body: JSON.stringify({
+        message: "validation failed for the params"
+      })
+    });
+    return;
+  }
+};
 
 const submitUserInfo = userInfo => {
-  console.log('Submitting userInfo');
+  console.log("Submitting userInfo");
   const UserInfo = {
     TableName: process.env.USER_INFO_TABLE,
-    Item: userInfo,
+    Item: userInfo
   };
 
-   return dynamoDb.put(UserInfo, function(err, data) {
+  return dynamoDb.put(UserInfo, function(err, data) {
     if (err) throw new Error(err);
     else return userInfo;
-   });
-    
+  });
 };
 
 const userInfomation = (firstName, lastName, password, email) => {
@@ -88,6 +85,50 @@ const userInfomation = (firstName, lastName, password, email) => {
     password,
     email,
     submittedAt: timestamp,
-    updatedAt: timestamp,
+    updatedAt: timestamp
   };
+};
+
+const getUserlist = async (event, context, callback) => {
+  try {
+    const usersList = await fetchUsers();
+    console.log("Scan succeeded.", usersList);
+
+    return common.responseObj(
+      callback,
+      200,
+      "Successfully fetched user information",
+      usersList
+    );
+  } catch (err) {
+    return common.responseObj(
+      callback,
+      500,
+      "Failed fetching user information with email"
+    );
+  }
+};
+
+const fetchUsers = async () => {
+  var params = {
+    TableName: process.env.USER_INFO_TABLE
+  };
+  let result = [];
+
+  console.log("Scanning userInfo table.", params);
+
+  dynamoDb.scan(params, function(err, data) {
+    console.log("Entered 1 database fetching function", data);
+    if (err) throw new Error(">>>>>", err);
+    else {
+      result = JSON.stringify(data, null, 2);
+    }
+  });
+
+  return result;
+};
+
+module.exports = {
+  submit,
+  getUserlist
 };

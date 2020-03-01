@@ -19,6 +19,15 @@ functions:
       - http: 
           path: userInfo
           method: post
+          
+  fetchUserInfo:
+    handler: api/userInfo.getUserlist
+    memorySize: 128
+    description: get user information.
+    events:
+      - http: 
+          path: userInfo
+          method: get        
 
 iamRoleStatements:
   - Effect: Allow
