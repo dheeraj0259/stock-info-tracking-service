@@ -21,7 +21,7 @@ functions:
           method: post
           
   fetchUserInfo:
-    handler: api/userInfo.getUserlist
+    handler: api/userInfo.fetchUsers
     memorySize: 128
     description: get user information.
     events:
