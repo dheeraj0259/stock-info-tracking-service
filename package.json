@@ -1,0 +1,24 @@
+{
+  "name": "stock-info-tracking-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dheeraj0259/stock-info-tracking-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dheeraj0259/stock-info-tracking-service/issues"
+  },
+  "homepage": "https://github.com/dheeraj0259/stock-info-tracking-service#readme",
+  "dependencies": {
+    "aws-sdk": "^2.630.0",
+    "bluebird": "^3.7.2",
+    "uuid": "^7.0.1"
+  }
+}
