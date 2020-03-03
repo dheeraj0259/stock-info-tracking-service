@@ -132,15 +132,13 @@ const fetchByUserEmail = (event, context, callback) => {
 
   dynamoDb.get(params).promise()
   .then(res => {
-    let status = 200;
     let message = `Successfully fetched user information for ${email}`;
     if(!res.Item) {
-      status = 404;
       message = "No User Information found for this email. Please create an account and sign in"
     }
     return common.responseObj(
       callback,
-      status,
+      200,
       message,
       res
     );
