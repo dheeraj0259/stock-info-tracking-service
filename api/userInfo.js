@@ -95,14 +95,14 @@ const onScanUsers = async (err, data, callback) => {
     return common.responseObj(
       callback,
       500,
-      "Failed fetching user information with email"
+      "Failed fetching user information for `${email}`"
     );
   } else {
     console.log("Scan succeeded.", data);
     return common.responseObj(
       callback,
       200,
-      "Successfully fetched user information with email",
+      "Successfully fetched user information with `${email}`",
       data
     );
 
@@ -132,10 +132,16 @@ const fetchByUserEmail = (event, context, callback) => {
 
   dynamoDb.get(params).promise()
   .then(res => {
+    let status = 200;
+    let message = `Successfully fetched user information for ${email}`;
+    if(!res.Item) {
+      status = 404;
+      message = "No User Information found for this email. Please create an account and sign in"
+    }
     return common.responseObj(
       callback,
-      200,
-      "Successfully fetched user information for `${email}`",
+      status,
+      message,
       res
     );
   }).catch(error => {
