@@ -90,7 +90,7 @@ const userInfomation = (firstName, lastName, password, email) => {
 };
 
 const onScanUsers = async (err, data, callback) => {
-  console.log("Entered the getUsersList Function");
+  console.log("Entered the getUsersList Function", data);
   if(err) {
     return common.responseObj(
       callback,
@@ -102,7 +102,7 @@ const onScanUsers = async (err, data, callback) => {
     return common.responseObj(
       callback,
       200,
-      "Successfully fetched user information",
+      "Successfully fetched user information with email",
       data
     );
 
@@ -119,7 +119,37 @@ const fetchUsers = (event, context, callback) => {
   dynamoDb.scan(params, (err, data) => onScanUsers(err, data, callback));
 };
 
+const fetchByUserEmail = (event, context, callback) => {
+  const email = event.pathParameters.email;
+  var params = {
+    TableName: process.env.USER_INFO_TABLE,
+    Key: {
+      email,
+    },
+  };
+
+  console.log("Scanning userInfo table.", params);
+
+  dynamoDb.get(params).promise()
+  .then(res => {
+    return common.responseObj(
+      callback,
+      200,
+      "Successfully fetched user information for `${email}`",
+      res
+    );
+  }).catch(error => {
+    console.log(error);
+    return common.responseObj(
+      callback,
+      500,
+      "Failed fetching user information with email"
+    );
+  })
+};
+
 module.exports = {
   submit,
-  fetchUsers
+  fetchUsers,
+  fetchByUserEmail
 };

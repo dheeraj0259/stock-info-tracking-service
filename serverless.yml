@@ -5,7 +5,7 @@ frameworkVersion: ">=1.1.0 <2.0.0"
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
+  stage: local
   region: us-east-2
   environment:
     USER_INFO_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
@@ -19,15 +19,54 @@ functions:
       - http: 
           path: userInfo
           method: post
+          cors:
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
           
   fetchUserInfo:
     handler: api/userInfo.fetchUsers
     memorySize: 128
-    description: get user information.
+    description: get users information.
     events:
       - http: 
           path: userInfo
-          method: get        
+          method: get      
+          cors:
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false  
+
+  fetchByUser:
+    handler: api/userInfo.fetchByUserEmail
+    memorySize: 128
+    description: get users information.
+    events:
+      - http: 
+          path: userInfo/{email}
+          method: get      
+          cors:
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false  
 
 iamRoleStatements:
   - Effect: Allow
@@ -47,11 +86,11 @@ resources:
        TableName: ${self:provider.environment.USER_INFO_TABLE}
        AttributeDefinitions:
           -
-            AttributeName: "id"
+            AttributeName: "email"
             AttributeType: "S"   
        KeySchema:
           -
-            AttributeName: "id"
+            AttributeName: "email"
             KeyType: "HASH"
        ProvisionedThroughput:
           ReadCapacityUnits: 1
