@@ -95,14 +95,14 @@ const onScanUsers = async (err, data, callback) => {
     return common.responseObj(
       callback,
       500,
-      "Failed fetching user information for `${email}`"
+      "Failed fetching all users information"
     );
   } else {
     console.log("Scan succeeded.", data);
     return common.responseObj(
       callback,
       200,
-      "Successfully fetched user information for all changing emails",
+      "Successfully fetched all users information",
       data
     );
 
