@@ -5,7 +5,6 @@ phases:
         nodejs: 10
   pre_build:
     commands:
-      - echo running pre-build commands in $stg 
       - npm install -g serverless    
       - npm install
   build:

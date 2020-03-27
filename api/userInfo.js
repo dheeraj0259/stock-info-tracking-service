@@ -102,7 +102,7 @@ const onScanUsers = async (err, data, callback) => {
     return common.responseObj(
       callback,
       200,
-      "Successfully fetched user information for all emails",
+      "Successfully fetched user information for all test emails",
       data
     );
 
