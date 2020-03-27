@@ -16,7 +16,3 @@ phases:
     commands:
       - echo running post-build commands in $stg 
       - sls deploy --stage $stg --package $CODEBUILD_SRC_DIR/target/$stg -v -r us-east-2
-  artifacts:
-    files:
-      - target/**/*
-      - serverless.yml
