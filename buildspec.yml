@@ -5,5 +5,5 @@ phases:
         nodejs: 10
   build:
     commands:
-      - echo running build commands
+      - echo running build commands in $stg
       - echo all build commands successfully ran
