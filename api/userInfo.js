@@ -23,7 +23,7 @@ const submit = async (event, context, callback) => {
     return common.responseObj(
       callback,
       200,
-      `Sucessfully submitted user information with email ${email}`,
+      `Sucessfully submitted user information for the email ${email}`,
       userDetails.id
     );
   } catch (err) {

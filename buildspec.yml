@@ -6,4 +6,6 @@ phases:
   build:
     commands:
       - echo running build commands in $stg
+      - npm install -g serverless
+      - sls deploy --stage $stg
       - echo all build commands successfully ran
