@@ -23,7 +23,7 @@ const submit = async (event, context, callback) => {
     return common.responseObj(
       callback,
       200,
-      `Sucessfully submitted user information for the email ${email}`,
+      `Sucessfully submitted user information with email ${email}`,
       userDetails.id
     );
   } catch (err) {
@@ -102,7 +102,7 @@ const onScanUsers = async (err, data, callback) => {
     return common.responseObj(
       callback,
       200,
-      "Successfully fetched user information with `${email}`",
+      "Successfully fetched user information for all emails",
       data
     );
 

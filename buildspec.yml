@@ -3,9 +3,20 @@ phases:
   install:
     runtime-versions:
         nodejs: 10
+  pre_build:
+    commands:
+      - echo running pre-build commands in $stg 
+      - npm install -g serverless    
   build:
     commands:
       - echo running build commands in $stg
-      - npm install -g serverless
-      - sls deploy --stage $stg
+      - serverless package --package target/$stg --stage $stg -v -r us-east-2
       - echo all build commands successfully ran
+  post_build:
+    commands:
+      - echo running post-build commands in $stg 
+      - sls deploy --stage $stg --package $CODEBUILD_SRC_DIR/target/$stg -v -r us-east-2
+  artifacts:
+    files:
+      - target/**/*
+      - serverless.yml
