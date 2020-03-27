@@ -15,7 +15,8 @@ phases:
   post_build:
     commands:
       - echo running post-build commands in $stg 
-  artifacts:
-    files:
-      - target/**/*
-      - serverless.yml    
+
+artifacts:
+  files:
+    - target/**/*
+    - serverless.yml    
