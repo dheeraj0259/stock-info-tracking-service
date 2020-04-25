@@ -1,37 +1,32 @@
 "use strict";
 
 const uuid = require("uuid");
-const AWS = require("aws-sdk");
 const moment = require("moment");
 
-const { common } = require("../util");
-AWS.config.setPromisesDependency(require("bluebird"));
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const { common, db } = require("../util");
+const dynamoDb = db.dbConnection();
+
+const tableName = "orders_table"
 
 const submit = async (event, context, callback) => {
-  const requestBody = JSON.parse(event.body);
-  const firstName = requestBody.firstName;
-  const lastName = requestBody.lastName;
-  const password = requestBody.password;
-  const email = requestBody.email;
-
-  validateParams(firstName, lastName, password, email, callback);
-  const userDetails = userInfomation(firstName, lastName, password, email);
-
   try {
-    submitUserInfo(userDetails);
+    submitUserInfo({
+      orderId: "test_id_2",
+      name: "test_name_2",
+      rank: "test_rank_2"
+    });
     return common.responseObj(
       callback,
       200,
-      `Sucessfully submitted user information with email ${email}`,
-      userDetails.id
+      `Sucessfully submitted user information with email`,
+      "this_is_test_success_id"
     );
   } catch (err) {
     return common.responseObj(
       callback,
       500,
-      `Failed submitting user information with email ${email}`,
-      userDetails.id
+      `Failed submitting user information with email`,
+      "this_is_test_fail_id"
     );
   }
 };
@@ -66,7 +61,7 @@ const validateParams = (firstName, lastName, password, email, callback) => {
 const submitUserInfo = userInfo => {
   console.log("Submitting userInfo");
   const UserInfo = {
-    TableName: process.env.USER_INFO_TABLE,
+    TableName: tableName,
     Item: userInfo
   };
 
@@ -90,7 +85,6 @@ const userInfomation = (firstName, lastName, password, email) => {
 };
 
 const onScanUsers = async (err, data, callback) => {
-  console.log("Entered the getUsersList Function", data);
   if(err) {
     return common.responseObj(
       callback,
@@ -98,7 +92,6 @@ const onScanUsers = async (err, data, callback) => {
       "Failed fetching all users information"
     );
   } else {
-    console.log("Scan succeeded.", data);
     return common.responseObj(
       callback,
       200,
@@ -111,7 +104,7 @@ const onScanUsers = async (err, data, callback) => {
 
 const fetchUsers = (event, context, callback) => {
   var params = {
-    TableName: process.env.USER_INFO_TABLE
+    TableName: tableName
   };
 
   console.log("Scanning userInfo table.", params);
@@ -122,13 +115,11 @@ const fetchUsers = (event, context, callback) => {
 const fetchByUserEmail = (event, context, callback) => {
   const email = event.pathParameters.email;
   var params = {
-    TableName: process.env.USER_INFO_TABLE,
+    TableName: tableName,
     Key: {
       email,
     },
   };
-
-  console.log("Scanning userInfo table.", params);
 
   dynamoDb.get(params).promise()
   .then(res => {

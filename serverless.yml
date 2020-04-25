@@ -10,6 +10,10 @@ provider:
   environment:
     USER_INFO_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
 
+custom:
+  serverless-offline:
+    httpPort: 4000
+
 functions:
   userInfoSubmission:
     handler: api/userInfo.submit
@@ -95,3 +99,7 @@ resources:
        ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
