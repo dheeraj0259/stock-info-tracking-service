@@ -6,15 +6,19 @@ const moment = require("moment");
 const { common, db } = require("../util");
 const dynamoDb = db.dbConnection();
 
-const tableName = "orders_table"
+const tableName = db.getTable();
 
 const submit = async (event, context, callback) => {
+  const requestBody = JSON.parse(event.body);
+  const firstName = requestBody.firstName;
+  const lastName = requestBody.lastName;
+  const password = requestBody.password;
+  const email = requestBody.email;
+
+  validateParams(firstName, lastName, password, email, callback);
+  const userDetails = userInfomation(firstName, lastName, password, email);
   try {
-    submitUserInfo({
-      orderId: "test_id_2",
-      name: "test_name_2",
-      rank: "test_rank_2"
-    });
+    submitUserInfo(userDetails);
     return common.responseObj(
       callback,
       200,
