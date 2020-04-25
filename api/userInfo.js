@@ -116,39 +116,6 @@ const fetchUsers = (event, context, callback) => {
   dynamoDb.scan(params, (err, data) => onScanUsers(err, data, callback));
 };
 
-const fetchByUserEmail = (event, context, callback) => {
-  const email = event.pathParameters.email;
-  var params = {
-    TableName: tableName,
-    Key: {
-      email,
-    },
-  };
-
-  dynamoDb.get(params).promise()
-  .then(res => {
-    let message = `Successfully fetched user information for ${email}`;
-    if(!res.Item) {
-      message = "No User Information found for this email. Please create an account and sign in"
-    }
-    return common.responseObj(
-      callback,
-      200,
-      message,
-      res
-    );
-  }).catch(error => {
-    console.log(error);
-    return common.responseObj(
-      callback,
-      500,
-      "Failed fetching user information with email"
-    );
-  })
-};
-
 module.exports = {
-  submit,
-  fetchUsers,
-  fetchByUserEmail
+  submit
 };
