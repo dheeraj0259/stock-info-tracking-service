@@ -1,6 +1,6 @@
 service: stock-information-service
 
-frameworkVersion: ">=1.1.0 <2.0.0"
+frameworkVersion: '>=1.1.0 <2.0.0'
 
 provider:
   name: aws
@@ -20,7 +20,7 @@ functions:
     memorySize: 128
     description: Submit user information.
     events:
-      - http: 
+      - http:
           path: userInfo
           method: post
           cors:
@@ -33,15 +33,15 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
             allowCredentials: false
-          
+
   fetchUserInfo:
     handler: api/user/get.users
     memorySize: 128
     description: get users information.
     events:
-      - http: 
+      - http:
           path: userInfo
-          method: get      
+          method: get
           cors:
             origin: '*' # <-- Specify allowed origin
             headers: # <-- Specify allowed headers
@@ -51,16 +51,16 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
               - X-Amz-User-Agent
-            allowCredentials: false  
+            allowCredentials: false
 
   fetchByUser:
     handler: api/user/get.userInfoByEmail
     memorySize: 128
     description: get users information.
     events:
-      - http: 
+      - http:
           path: userInfo/{email}
-          method: get      
+          method: get
           cors:
             origin: '*' # <-- Specify allowed origin
             headers: # <-- Specify allowed headers
@@ -70,7 +70,7 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
               - X-Amz-User-Agent
-            allowCredentials: false  
+            allowCredentials: false
 
 iamRoleStatements:
   - Effect: Allow
@@ -79,7 +79,7 @@ iamRoleStatements:
       - dynamodb:Scan
       - dynamodb:GetItem
       - dynamodb:PutItem
-    Resource: "*"         
+    Resource: '*'
 
 resources:
   Resources:
@@ -87,16 +87,14 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-       TableName: ${self:provider.environment.USER_INFO_TABLE}
-       AttributeDefinitions:
-          -
-            AttributeName: "email"
-            AttributeType: "S"   
-       KeySchema:
-          -
-            AttributeName: "email"
-            KeyType: "HASH"
-       ProvisionedThroughput:
+        TableName: ${self:provider.environment.USER_INFO_TABLE}
+        AttributeDefinitions:
+          - AttributeName: 'email'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'email'
+            KeyType: 'HASH'
+        ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
