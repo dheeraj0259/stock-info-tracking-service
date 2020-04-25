@@ -4,9 +4,9 @@ const chalk = require('chalk');
 const getTable = () => {
     if(process.env.ENVIRONMENT === "local") {
         console.log(chalk.bgGreenBright(
-            chalk.white.bold("****** Using Table-Name: orders_table ******")
+            chalk.white.bold("****** Using Table-Name: stock-information-service-users-local ******")
             ));
-            return "orders_table";
+            return "stock-information-service-users-local";
     }
     else {
         console.log(chalk.bgGreenBright(
