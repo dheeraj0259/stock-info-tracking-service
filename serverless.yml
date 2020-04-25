@@ -35,7 +35,7 @@ functions:
             allowCredentials: false
           
   fetchUserInfo:
-    handler: api/userInfo.fetchUsers
+    handler: api/user/getUsers.fetchUsers
     memorySize: 128
     description: get users information.
     events:
