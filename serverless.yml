@@ -16,7 +16,7 @@ custom:
 
 functions:
   userInfoSubmission:
-    handler: api/userInfo.submit
+    handler: api/user/post.userInfo
     memorySize: 128
     description: Submit user information.
     events:
