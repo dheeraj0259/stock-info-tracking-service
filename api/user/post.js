@@ -4,7 +4,6 @@ const moment = require("moment");
 const { common, db } = require("../../util");
 
 const dynamoDb = db.dbConnection();
-
 const tableName = db.getTable();
 
 const validateParams = (firstName, lastName, password, email, callback) => {
