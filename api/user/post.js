@@ -11,7 +11,7 @@ const validateParams = (firstName, lastName, password, email, callback) => {
     if (!firstName || !lastName || !password || !email) {
         callback(null, {
             statusCode: 404,
-            body:       JSON.stringify({message: "Missing parameters"}),
+            body:       JSON.stringify({ message: "Missing parameters" }),
         });
         return;
     }
@@ -24,7 +24,7 @@ const validateParams = (firstName, lastName, password, email, callback) => {
     ) {
         callback(null, {
             statusCode: 412,
-            body:       JSON.stringify({message: "validation failed for the params"}),
+            body:       JSON.stringify({ message: "validation failed for the params" }),
         });
         return;
     }
@@ -83,4 +83,4 @@ const userInfo = async (event, context, callback) => {
     }
 };
 
-module.exports = {userInfo};
+module.exports = { userInfo };

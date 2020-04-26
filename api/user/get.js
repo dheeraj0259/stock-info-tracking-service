@@ -7,13 +7,12 @@ const tableName = db.getTable();
 const onScanUsers = async (err, data, callback) => {
     if (err) {
         return common.responseObj(callback, 500, "Failed fetching all users information");
-    } 
+    }
     return common.responseObj(callback, 200, "Successfully fetched all users information", data);
-  
 };
 
 const users = (event, context, callback) => {
-    const params = {TableName: tableName};
+    const params = { TableName: tableName };
 
     console.log("Scanning userInfo table.", params);
 
@@ -24,7 +23,7 @@ const userInfoByEmail = (event, context, callback) => {
     const email = event.pathParameters.email;
     const params = {
         TableName: tableName,
-        Key:       {email},
+        Key:       { email },
     };
 
     dynamoDb
