@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/dheeraj0259/stock-info-tracking-service#readme",
   "dependencies": {
-    "aws-sdk": "^2.630.0",
+    "aws-sdk": "^2.814.0",
     "bluebird": "^3.7.2",
     "moment": "^2.24.0",
     "uuid": "^7.0.1"
